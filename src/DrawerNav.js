@@ -21,9 +21,12 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
-import { Route, Switch, Link } from "react-router-dom";
+import { Route, Switch, Link, Redirect } from "react-router-dom";
 import Todo from "./Todo";
 import Profile from "./Profile";
+// import PrivateRoute from "./PrivateRoute";
+import Emoji from "./Emoji.js";
+import { auth } from "./firebase";
 
 const drawerWidth = 240;
 
@@ -116,10 +119,11 @@ export default function PersistentDrawerLeft() {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" noWrap>
-						Persistent drawer
+						Project Name <Emoji symbol="🚀" label="rocket" />
 					</Typography>
 				</Toolbar>
 			</AppBar>
+
 			<Drawer
 				className={classes.drawer}
 				variant="persistent"
@@ -140,7 +144,7 @@ export default function PersistentDrawerLeft() {
 				</div>
 				<Divider />
 				<List>
-					<ListItem button key="todo" component={Link} to="/">
+					<ListItem button key="todo" component={Link} to="/todo">
 						<ListItemIcon>
 							<ListAltIcon />
 						</ListItemIcon>
@@ -157,7 +161,7 @@ export default function PersistentDrawerLeft() {
 						</ListItemIcon>
 						<ListItemText primary="Profile" />
 					</ListItem>
-					<ListItem button>
+					<ListItem button onClick={() => auth.signOut()}>
 						<ListItemIcon>
 							<ExitToAppIcon />
 						</ListItemIcon>
@@ -173,11 +177,10 @@ export default function PersistentDrawerLeft() {
 				<div className={classes.drawerHeader} />
 				<Switch>
 					<Route exact path="/">
-						<Todo />
+						<Redirect to="/todo" />
 					</Route>
-					<Route exact path="/profile">
-						<Profile />
-					</Route>
+					<Route exact path="/todo" component={Todo} />
+					<Route exact path="/profile" component={Profile} />
 				</Switch>
 			</main>
 		</div>

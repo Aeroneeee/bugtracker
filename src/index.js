@@ -4,13 +4,16 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
+import { AuthProvider } from "./Auth";
 
 ReactDOM.render(
 	<React.StrictMode>
-		<Router>
-			<CssBaseline />
-			<App />
-		</Router>
+		<AuthProvider>
+			<Router>
+				<CssBaseline />
+				<App />
+			</Router>
+		</AuthProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
 );
