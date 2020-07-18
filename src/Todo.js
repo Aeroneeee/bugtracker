@@ -5,10 +5,9 @@ import {
 	Input,
 	InputLabel,
 	List,
-	ListItem,
 } from "@material-ui/core";
 import Emoji from "./Emoji";
-// import TodoList from "./TodoList";
+import TodoList from "./TodoList";
 import { firestore } from "./firebase";
 import firebase from "firebase/app";
 
@@ -17,6 +16,7 @@ function useTodos() {
 	useEffect(() => {
 		const unsubscribe = firestore
 			.collection("todos")
+			.orderBy("timestamp", "asc")
 			.onSnapshot((snapshot) => {
 				setTodos(
 					snapshot.docs.map((doc) => ({
@@ -31,7 +31,6 @@ function useTodos() {
 }
 
 const Todo = () => {
-	// const [todos, setTodos] = useState([]);
 	const [input, setInput] = useState("");
 	const todos = useTodos();
 
@@ -66,7 +65,6 @@ const Todo = () => {
 					<Button
 						type="submit"
 						disabled={!input}
-						// onClick={addTodo}
 						variant="contained"
 						color="primary"
 					>
@@ -76,10 +74,11 @@ const Todo = () => {
 			</form>
 			<List>
 				{todos.map((todos) => (
-					<ListItem key={todos.id}>
-						{todos.todo}
-						{/* <TodoList todos={todo} /> */}
-					</ListItem>
+					<TodoList todos={todos} key={todos.id} />
+					// <ListItem key={todos.id}>
+					// 	{todos.todo}
+
+					// </ListItem>
 				))}
 			</List>
 		</div>

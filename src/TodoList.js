@@ -10,8 +10,8 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import { firestore } from "./firebase";
 import { makeStyles } from "@material-ui/core/styles";
-import app from "./firebase";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const TodoList = (props) => {
+function TodoList({ todos }) {
 	const [open, setOpen] = useState(false);
 	const classes = useStyles();
 	const [input, setInput] = useState("");
@@ -35,7 +35,7 @@ const TodoList = (props) => {
 	const updateTodo = (event) => {
 		event.preventDefault();
 		setOpen(false);
-		app.firestore().collection("todos").doc(props.todos.id).set(
+		firestore.collection("todos").doc(todos.id).set(
 			{
 				todo: input,
 			},
@@ -45,18 +45,22 @@ const TodoList = (props) => {
 
 	return (
 		<div>
-			<Modal open={open} onClose={setOpen(false)}>
+			<Modal open={open} onClose={() => setOpen(false)}>
 				<div className={classes.paper}>
-					<form>
+					<form onSubmit={updateTodo}>
 						<h3 style={{ textAlign: "center" }}>
 							Change your todo
 						</h3>
-						<InputLabel>{props.todos.todo}</InputLabel>
+						<InputLabel>{todos.todo}</InputLabel>
 						<Input
 							value={input}
 							onChange={(event) => setInput(event.target.value)}
 						/>
-						<Button type="submit" onClick={updateTodo}>
+						<Button
+							type="submit"
+							disabled={!input}
+							onClick={updateTodo}
+						>
 							Update Todo
 						</Button>
 					</form>
@@ -64,26 +68,20 @@ const TodoList = (props) => {
 			</Modal>
 			<ListItem>
 				<Checkbox />
-				<ListItemText
-					primary={props.todos.todo}
-					secondary="⏰ No deadline"
-				/>
-				<Button onClick={setOpen(true)}>
+				<ListItemText primary={todos.todo} secondary="⏰ No deadline" />
+				<Button onClick={() => setOpen(true)}>
 					<EditIcon />
 				</Button>
 				<Button
 					onClick={() => {
-						app.firestore()
-							.collection("todos")
-							.doc(props.todo.id)
-							.delete();
+						firestore.collection("todos").doc(todos.id).delete();
 					}}
 				>
-					<DeleteIcon></DeleteIcon>
+					<DeleteIcon />
 				</Button>
 			</ListItem>
 		</div>
 	);
-};
+}
 
 export default TodoList;
