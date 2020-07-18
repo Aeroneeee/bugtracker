@@ -1,7 +1,6 @@
 import React, { useCallback, useContext } from "react";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
-// import FormControl from "@material-ui/core/FormControl";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
 import CardContent from "@material-ui/core/CardContent";
@@ -15,7 +14,7 @@ const Login = ({ history }) => {
 			event.preventDefault();
 			const { email, password } = event.target.elements;
 			try {
-				console.log(email.value);
+				// console.log(email.value);
 
 				await auth.signInWithEmailAndPassword(
 					email.value,
@@ -65,7 +64,7 @@ const Login = ({ history }) => {
 						size="small"
 					/>
 
-					<Button variant="primary" type="submit">
+					<Button variant="contained" color="primary" type="submit">
 						Log in
 					</Button>
 					<hr />

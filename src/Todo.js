@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
-import {
-	Button,
-	FormControl,
-	Input,
-	InputLabel,
-	List,
-} from "@material-ui/core";
+import React, { useState, useEffect, useContext } from "react";
+import { Button, Input, InputLabel, List } from "@material-ui/core";
 import Emoji from "./Emoji";
 import TodoList from "./TodoList";
 import { firestore } from "./firebase";
 import firebase from "firebase/app";
+import { AuthContext } from "./Auth";
 
 function useTodos() {
 	const [todos, setTodos] = useState([]);
+
 	useEffect(() => {
 		const unsubscribe = firestore
 			.collection("todos")
@@ -31,6 +27,7 @@ function useTodos() {
 }
 
 const Todo = () => {
+	const { currentUser } = useContext(AuthContext);
 	const [input, setInput] = useState("");
 	const todos = useTodos();
 
@@ -52,25 +49,24 @@ const Todo = () => {
 	return (
 		<div style={{ textAlign: "center" }}>
 			<h1>
-				Hello Aerone <Emoji symbol="🚀" label="rocket" />
+				Hello {currentUser.displayName}{" "}
+				<Emoji symbol="🚀" label="rocket" />
 				!!!
 			</h1>
 			<form onSubmit={addTodo}>
-				<FormControl>
-					<InputLabel>✔ What do you want to do</InputLabel>
-					<Input
-						value={input}
-						onChange={(event) => setInput(event.target.value)}
-					/>
-					<Button
-						type="submit"
-						disabled={!input}
-						variant="contained"
-						color="primary"
-					>
-						Add Todo
-					</Button>
-				</FormControl>
+				<InputLabel>✔ What do you want to do</InputLabel>
+				<Input
+					value={input}
+					onChange={(event) => setInput(event.target.value)}
+				/>
+				<Button
+					type="submit"
+					disabled={!input}
+					variant="contained"
+					color="primary"
+				>
+					Add Todo
+				</Button>
 			</form>
 			<List>
 				{todos.map((todos) => (
