@@ -69,7 +69,7 @@ const Login = ({ history }) => {
 					</Button>
 					<hr />
 					<p>Don't have an account?</p>
-					<Button variant="info" component={Link} to="/signup">
+					<Button variant="contained" component={Link} to="/signup">
 						Create new account
 					</Button>
 				</form>

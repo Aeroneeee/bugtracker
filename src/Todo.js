@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Button, Input, InputLabel, List } from "@material-ui/core";
+import { Button, List, TextField } from "@material-ui/core";
 import Emoji from "./Emoji";
 import TodoList from "./TodoList";
 import { firestore } from "./firebase";
@@ -39,6 +39,7 @@ const Todo = () => {
 			.collection("todos")
 			.add({
 				todo: input,
+				creator: currentUser.displayName,
 				timestamp: firebase.firestore.FieldValue.serverTimestamp(),
 			})
 			.then(() => {
@@ -54,8 +55,8 @@ const Todo = () => {
 				!!!
 			</h1>
 			<form onSubmit={addTodo}>
-				<InputLabel>✔ What do you want to do</InputLabel>
-				<Input
+				<TextField
+					label="✔ What do you want to do"
 					value={input}
 					onChange={(event) => setInput(event.target.value)}
 				/>
@@ -68,7 +69,13 @@ const Todo = () => {
 					Add Todo
 				</Button>
 			</form>
-			<List>
+			<List
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+				}}
+			>
 				{todos.map((todos) => (
 					<TodoList todos={todos} key={todos.id} />
 					// <ListItem key={todos.id}>
