@@ -7,8 +7,27 @@ import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
 import { auth } from "./firebase";
 import { AuthContext } from "./Auth";
+import { makeStyles } from "@material-ui/core/styles";
+import { CardHeader } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+	formCard: {
+		width: "20rem",
+		position: "absolute",
+		left: "50%",
+		top: "50%",
+		transform: "translate(-50%, -50%)",
+		textAlign: "center",
+	},
+	content: {
+		"& > *": {
+			margin: theme.spacing(1),
+		},
+	},
+}));
 
 const Login = ({ history }) => {
+	const classes = useStyles();
 	const handleLogin = useCallback(
 		async (event) => {
 			event.preventDefault();
@@ -35,18 +54,10 @@ const Login = ({ history }) => {
 	}
 
 	return (
-		<Card
-			style={{
-				width: "18rem",
-				position: "absolute",
-				left: "50%",
-				top: "50%",
-				transform: "translate(-50%, -50%)",
-			}}
-		>
-			<h1>Log In</h1>
+		<Card className={classes.formCard}>
+			<CardHeader title="Log In"></CardHeader>
 			<CardContent>
-				<form onSubmit={handleLogin}>
+				<form onSubmit={handleLogin} className={classes.content}>
 					<TextField
 						label="Email address"
 						variant="outlined"

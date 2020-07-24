@@ -2,15 +2,18 @@ import React, { useState, useEffect, useContext } from "react";
 import { Button, List, TextField } from "@material-ui/core";
 import Emoji from "./Emoji";
 import TodoList from "./TodoList";
-import { firestore } from "./firebase";
-import firebase from "firebase/app";
+import { firestore, firebase } from "./firebase";
+// import firebase from "firebase/app";
 import { AuthContext } from "./Auth";
 
 function useTodos() {
 	const [todos, setTodos] = useState([]);
+	const { currentUser } = useContext(AuthContext);
 
 	useEffect(() => {
 		const unsubscribe = firestore
+			.collection("user")
+			.doc(currentUser.email)
 			.collection("todos")
 			.orderBy("timestamp", "asc")
 			.onSnapshot((snapshot) => {
@@ -22,7 +25,7 @@ function useTodos() {
 				);
 			});
 		return () => unsubscribe();
-	}, []);
+	}, [currentUser]);
 	return todos;
 }
 
@@ -36,10 +39,11 @@ const Todo = () => {
 		event.preventDefault();
 
 		firestore
+			.collection("user")
+			.doc(currentUser.email)
 			.collection("todos")
 			.add({
 				todo: input,
-				creator: currentUser.displayName,
 				timestamp: firebase.firestore.FieldValue.serverTimestamp(),
 			})
 			.then(() => {
@@ -69,20 +73,18 @@ const Todo = () => {
 					Add Todo
 				</Button>
 			</form>
-			<List
-				style={{
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-			>
-				{todos.map((todos) => (
-					<TodoList todos={todos} key={todos.id} />
-					// <ListItem key={todos.id}>
-					// 	{todos.todo}
-
-					// </ListItem>
-				))}
+			<List>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+					}}
+				>
+					{todos.map((todos) => (
+						<TodoList todos={todos} key={todos.id} />
+					))}
+				</div>
 			</List>
 		</div>
 	);

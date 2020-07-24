@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	ListItem,
 	ListItemText,
@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { firestore } from "./firebase";
 import { makeStyles } from "@material-ui/core/styles";
-// import { AuthContext } from "./Auth";
+import { AuthContext } from "./Auth";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -30,25 +30,30 @@ const useStyles = makeStyles((theme) => ({
 	todo: {
 		display: "flex",
 		flexDirection: "row",
-		flexWrap: "nowrap",
+		width: "80vw",
 	},
 }));
 
 function TodoList({ todos }) {
 	const [open, setOpen] = useState(false);
 	const classes = useStyles();
-	const [input, setInput] = useState("");
-	// const { currentUser } = useContext(AuthContext);
+	const [input, setInput] = useState(todos.todo);
+	const { currentUser } = useContext(AuthContext);
 
 	const updateTodo = (event) => {
 		event.preventDefault();
 		setOpen(false);
-		firestore.collection("todos").doc(todos.id).set(
-			{
-				todo: input,
-			},
-			{ merge: true }
-		);
+		firestore
+			.collection("user")
+			.doc(currentUser.email)
+			.collection("todos")
+			.doc(todos.id)
+			.set(
+				{
+					todo: input,
+				},
+				{ merge: true }
+			);
 	};
 
 	return (
@@ -59,7 +64,6 @@ function TodoList({ todos }) {
 						<h3 style={{ textAlign: "center" }}>
 							Change your todo
 						</h3>
-						<InputLabel>{todos.todo}</InputLabel>
 						<Input
 							value={input}
 							onChange={(event) => setInput(event.target.value)}
@@ -79,7 +83,8 @@ function TodoList({ todos }) {
 					<Checkbox />
 					<ListItemText
 						primary={todos.todo}
-						secondary={`Created by: ${todos.creator}`}
+						secondary={"⏰: No deadline"}
+						style={{ whiteSpace: "nowrap" }}
 					/>
 					<Button onClick={() => setOpen(true)}>
 						<EditIcon />
@@ -87,6 +92,8 @@ function TodoList({ todos }) {
 					<Button
 						onClick={() => {
 							firestore
+								.collection("user")
+								.doc(currentUser.email)
 								.collection("todos")
 								.doc(todos.id)
 								.delete();

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -15,18 +15,25 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import WorkIcon from "@material-ui/icons/Work";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import FolderIcon from "@material-ui/icons/Folder";
+import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 // import InboxIcon from "@material-ui/icons/MoveToInbox";
 // import MailIcon from "@material-ui/icons/Mail";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
-import { Route, Switch, Link, Redirect } from "react-router-dom";
+import { Route, Switch, Link, Redirect, useLocation } from "react-router-dom";
 import Todo from "./Todo";
 import Profile from "./Profile";
+import Projects from "./Projects";
 // import PrivateRoute from "./PrivateRoute";
-import Emoji from "./Emoji.js";
+// import Emoji from "./Emoji.js";
 import { auth } from "./firebase";
+import { Collapse } from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -85,15 +92,41 @@ const useStyles = makeStyles((theme) => ({
 		}),
 		marginLeft: 0,
 	},
+	nested: {
+		paddingLeft: theme.spacing(4),
+	},
 }));
 
 export default function PersistentDrawerLeft() {
 	const classes = useStyles();
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
+	const [openProjects, setOpenProjects] = useState(false);
 
 	const handleDrawer = () => {
 		setOpen(!open);
+	};
+
+	const handleClick = () => {
+		setOpenProjects(!openProjects);
+	};
+
+	let location = useLocation();
+	// console.log("location", location);
+	const appBarTitle = () => {
+		switch (location.pathname) {
+			case "/projects":
+				return "Create a project";
+
+			case "/todo":
+				return "Your todo list";
+
+			case "/profile":
+				return "Profile";
+
+			default:
+				return "";
+		}
 	};
 
 	return (
@@ -119,7 +152,8 @@ export default function PersistentDrawerLeft() {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" noWrap>
-						Project Name <Emoji symbol="🚀" label="rocket" />
+						{appBarTitle()}
+						{/* Project Name <Emoji symbol="🚀" label="rocket" /> */}
 					</Typography>
 				</Toolbar>
 			</AppBar>
@@ -144,11 +178,50 @@ export default function PersistentDrawerLeft() {
 				</div>
 				<Divider />
 				<List>
+					<ListItem button onClick={handleClick}>
+						<ListItemIcon>
+							<WorkIcon />
+						</ListItemIcon>
+						<ListItemText primary="Projects" />
+						{openProjects ? <ExpandLess /> : <ExpandMore />}
+					</ListItem>
+					<Collapse
+						in={openProjects}
+						timeout="auto"
+						className={classes.nested}
+						unmountOnExit
+					>
+						<List component="div" disablePadding>
+							<ListItem button component={Link} to="/projects">
+								<ListItemIcon>
+									<FolderIcon />
+								</ListItemIcon>
+								<ListItemText primary="New Sample Project" />
+							</ListItem>
+							<ListItem button component={Link} to="/projects">
+								<ListItemIcon>
+									<CreateNewFolderIcon />
+								</ListItemIcon>
+								<ListItemText primary="Add Project" />
+							</ListItem>
+						</List>
+					</Collapse>
+					{/* <ListItem
+						button
+						key="projects"
+						component={Link}
+						to="/projects"
+					>
+						<ListItemIcon>
+							<WorkIcon />
+						</ListItemIcon>
+						<ListItemText primary="Projects" />
+					</ListItem> */}
 					<ListItem button key="todo" component={Link} to="/todo">
 						<ListItemIcon>
 							<ListAltIcon />
 						</ListItemIcon>
-						<ListItemText primary="Todo" />
+						<ListItemText primary="Your Todo" />
 					</ListItem>
 					<ListItem
 						button
@@ -177,8 +250,9 @@ export default function PersistentDrawerLeft() {
 				<div className={classes.drawerHeader} />
 				<Switch>
 					<Route exact path="/">
-						<Redirect to="/todo" />
+						<Redirect to="/projects" />
 					</Route>
+					<Route exact path="/projects" component={Projects} />
 					<Route exact path="/todo" component={Todo} />
 					<Route exact path="/profile" component={Profile} />
 				</Switch>
