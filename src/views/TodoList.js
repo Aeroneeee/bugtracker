@@ -1,4 +1,9 @@
 import React, { useState, useContext } from "react";
+
+import { firestore } from "../services/firebase";
+import { AuthContext } from "../services/Auth";
+
+import { makeStyles } from "@material-ui/core/styles";
 import {
 	ListItem,
 	ListItemText,
@@ -6,14 +11,10 @@ import {
 	Button,
 	Modal,
 	Input,
-	InputLabel,
 	Card,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import { firestore } from "./firebase";
-import { makeStyles } from "@material-ui/core/styles";
-import { AuthContext } from "./Auth";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function TodoList({ todos }) {
+const TodoList = ({ todos }) => {
 	const [open, setOpen] = useState(false);
 	const classes = useStyles();
 	const [input, setInput] = useState(todos.todo);
@@ -105,6 +106,6 @@ function TodoList({ todos }) {
 			</ListItem>
 		</div>
 	);
-}
+};
 
 export default TodoList;

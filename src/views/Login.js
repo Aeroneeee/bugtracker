@@ -1,14 +1,17 @@
 import React, { useCallback, useContext } from "react";
+
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
-import Card from "@material-ui/core/Card";
-import Button from "@material-ui/core/Button";
-import CardContent from "@material-ui/core/CardContent";
-import TextField from "@material-ui/core/TextField";
-import { auth } from "./firebase";
-import { AuthContext } from "./Auth";
+
+import { AuthContext } from "../services/Auth";
+import { auth } from "../services/firebase";
+
 import { makeStyles } from "@material-ui/core/styles";
-import { CardHeader } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
 
 const useStyles = makeStyles((theme) => ({
 	formCard: {

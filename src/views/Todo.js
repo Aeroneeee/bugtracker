@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Button, List, TextField } from "@material-ui/core";
-import Emoji from "./Emoji";
+
+import { firestore, firebase } from "../services/firebase";
+import { AuthContext } from "../services/Auth";
+
+import Emoji from "../Emoji";
 import TodoList from "./TodoList";
-import { firestore, firebase } from "./firebase";
-// import firebase from "firebase/app";
-import { AuthContext } from "./Auth";
+
+import { Button, List, TextField } from "@material-ui/core";
 
 function useTodos() {
 	const [todos, setTodos] = useState([]);

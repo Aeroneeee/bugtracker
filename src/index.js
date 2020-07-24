@@ -4,7 +4,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
-import { AuthProvider } from "./Auth";
+import { AuthProvider } from "./services/Auth";
 
 ReactDOM.render(
 	<React.StrictMode>

@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import clsx from "clsx";
+import { Route, Switch, Link, Redirect, useLocation } from "react-router-dom";
+
+import { auth } from "./services/firebase";
+
+import Todo from "./views/Todo";
+import Profile from "./views/Profile";
+import Projects from "./views/Projects";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import clsx from "clsx";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -20,20 +28,10 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import FolderIcon from "@material-ui/icons/Folder";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
-// import InboxIcon from "@material-ui/icons/MoveToInbox";
-// import MailIcon from "@material-ui/icons/Mail";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-
-import { Route, Switch, Link, Redirect, useLocation } from "react-router-dom";
-import Todo from "./Todo";
-import Profile from "./Profile";
-import Projects from "./Projects";
-// import PrivateRoute from "./PrivateRoute";
-// import Emoji from "./Emoji.js";
-import { auth } from "./firebase";
-import { Collapse } from "@material-ui/core";
+import Collapse from "@material-ui/core/Collapse";
 
 const drawerWidth = 240;
 
@@ -97,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function PersistentDrawerLeft() {
+const DrawerNav = () => {
 	const classes = useStyles();
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
@@ -259,4 +257,6 @@ export default function PersistentDrawerLeft() {
 			</main>
 		</div>
 	);
-}
+};
+
+export default DrawerNav;

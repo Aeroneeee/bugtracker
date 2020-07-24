@@ -1,5 +1,8 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "./Auth";
+
+import { storage } from "../services/firebase";
+import { AuthContext } from "../services/Auth";
+
 import {
 	Input,
 	Button,
@@ -12,7 +15,6 @@ import {
 	IconButton,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { storage } from "./firebase";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -30,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function Profile() {
+const Profile = () => {
 	const classes = useStyles();
 	const { currentUser } = useContext(AuthContext);
 	const [input, setInput] = useState("");
@@ -155,6 +157,6 @@ function Profile() {
 			</Box>
 		</div>
 	);
-}
+};
 
 export default Profile;
